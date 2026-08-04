@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plano de Estudos - Regulamentos</title>
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Estudos">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js CDN for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --status-not-started: #94a3b8;
+            --status-in-progress: #f97316;
+            --status-completed: #10b981;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-bottom: 85px;
+            max-width: 960px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        header h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-icon:active {
+            background: #e2e8f0;
+        }
+
+        main {
+            padding: 16px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 960px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 50;
+            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.03);
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+        }
+        .view.active {
+            display: block;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        .stat-card .label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .progress-banner {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .progress-banner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-banner .percent {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: #ffffff;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 10px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 20px 0 12px 0;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .subject-progress-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .subject-progress-card .header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .subject-bar-bg {
+            background: #e2e8f0;
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .subject-bar-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .subject-details-mini {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Charts Container Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-card h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 240px;
+            width: 100%;
+        }
+
+        @media (max-width: 640px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Subject Selection Pills */
+        .pills-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+        .pills-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Filter Controls */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+
+        .filter-select {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-size: 0.85rem;
+        }
+
+        /* --- TABLE ROW FORMAT WITH EXPANDED RANGE COLUMN --- */
+        .topics-table-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .table-header-row {
+            display: grid;
+            grid-template-columns: 28px 26px 1fr minmax(130px, auto) 48px 110px;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topic-row {
+            display: grid;
+            grid-template-columns: 28px 26px 1fr minmax(130px, auto) 48px 110px;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .topic-row.completed {
+            background: #f8fafc;
+            border-left: 4px solid var(--status-completed);
+        }
+
+        /* Status Circle (Cinza -> Laranja -> Verde) */
+        .status-circle-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2.5px solid var(--status-not-started);
+            background-color: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .status-circle-btn.state-0 {
+            border-color: var(--status-not-started);
+            background-color: transparent;
+        }
+
+        .status-circle-btn.state-1 {
+            border-color: var(--status-in-progress);
+            background-color: var(--status-in-progress);
+            color: white;
+        }
+
+        .status-circle-btn.state-2 {
+            border-color: var(--status-completed);
+            background-color: var(--status-completed);
+            color: white;
+        }
+
+        .topic-idx {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .topic-title-cell {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .topic-title-text {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .topic-subject-tag {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .topic-range-tag {
+            font-size: 0.78rem;
+            color: var(--primary);
+            font-weight: 600;
+            background: var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .questoes-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .questoes-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .questoes-checkbox-label input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .revisoes-inline {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-body);
+            padding: 4px 6px;
+            border-radius: 6px;
+        }
+
+        .rev-check {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .rev-check input {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Layout Responsivo para Telas Pequenas */
+        @media (max-width: 640px) {
+            .table-header-row {
+                display: none;
+            }
+
+            .topic-row {
+                grid-template-columns: 24px 20px 1fr auto;
+                grid-template-areas: 
+                    "status idx title range"
+                    "status idx quest rev";
+                row-gap: 6px;
+                padding: 10px;
+            }
+
+            .status-circle-btn { grid-area: status; }
+            .topic-idx { grid-area: idx; }
+            .topic-title-cell { grid-area: title; }
+            .topic-range-tag { grid-area: range; justify-self: end; }
+            .questoes-cell { grid-area: quest; justify-self: start; }
+            .revisoes-inline { grid-area: rev; justify-self: end; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #0f172a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Estudos FAB
+        </h1>
+        <div class="header-actions">
+            <button class="btn-icon" onclick="exportData()" title="Exportar Backup">
+                💾 Backup
+            </button>
+            <button class="btn-icon" onclick="importData()" title="Importar Backup">
+                📂 Abrir
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Views -->
+    <main>
+        <!-- View 1: Dashboard -->
+        <section id="view-dashboard" class="view active">
+            <div class="progress-banner">
+                <div class="progress-banner-header">
+                    <div>
+                        <div style="font-size: 0.85rem; opacity: 0.9;">PROGRESSO GERAL</div>
+                        <div style="font-size: 0.78rem; opacity: 0.8;">Teoria, Questões e Revisões</div>
+                    </div>
+                    <div class="percent" id="total-percent">0%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="total-progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="label">Teoria</div>
+                    <div class="value" id="stat-teoria">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Questões</div>
+                    <div class="value" id="stat-questoes">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Revisões</div>
+                    <div class="value" id="stat-revisoes">0%</div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <span>Progresso por Matéria</span>
+            </div>
+
+            <div id="subject-progress-list"></div>
+        </section>
+
+        <!-- View 2: Gráficos e Estatísticas (Substitui Próximos) -->
+        <section id="view-graficos" class="view">
+            <div class="section-title">
+                <span>📊 Análise de Desempenho</span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+                Acompanhe visualmente a distribuição do seu progresso em cada matéria e tipo de atividade.
+            </p>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Progresso por Matéria (%)</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chartSubjectBar"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Cobertura Geral por Tipo</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chartTypeDoughnut"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View 3: Edital Completo por Matéria -->
+        <section id="view-edital" class="view">
+            <div class="pills-container" id="subject-pills"></div>
+
+            <div class="filter-bar">
+                <span id="subject-count-label" style="color: var(--text-muted); font-weight: 500;">0 tópicos</span>
+                <select class="filter-select" id="status-filter" onchange="renderEditalView()">
+                    <option value="all">Todos os Tópicos</option>
+                    <option value="pending">Pendentes</option>
+                    <option value="completed">Concluídos</option>
+                </select>
+            </div>
+
+            <div class="topics-table-container">
+                <div class="table-header-row">
+                    <span>Status</span>
+                    <span>#</span>
+                    <span>Título / Tópico</span>
+                    <span style="text-align: center;">Artigos/Itens</span>
+                    <span style="text-align: center;">Questões</span>
+                    <span style="text-align: center;">Revisões</span>
+                </div>
+                <div id="edital-topics-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('dashboard')">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Dashboard
+        </button>
+        <button class="tab-btn" onclick="switchTab('graficos')">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            Gráficos
+        </button>
+        <button class="tab-btn" onclick="switchTab('edital')">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            Edital
+        </button>
+    </nav>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Progresso Salvo!</div>
+
+    <!-- Hidden Input for Import -->
+    <input type="file" id="import-file" style="display: none;" accept=".json" onchange="handleFileImport(event)">
+
+    <script>
+        // Database with Cleaned Subject Prefixes
+        const rawSubjects = {"Estatuto": [{"title": "Disposições Preliminares e Ingresso", "inicio": "Art. 1", "fim": "Art. 13"}, {"title": "Hierarquia e Disciplina", "inicio": "Art. 14", "fim": "Art. 19"}, {"title": "Cargo e Função Militares", "inicio": "Art. 20", "fim": "Art. 26"}, {"title": "Valor e Ética Militar", "inicio": "Art. 27", "fim": "Art. 30"}, {"title": "Deveres e Compromisso Militar", "inicio": "Art. 31", "fim": "Art. 33"}, {"title": "Comando, Subordinação e Responsabilidade", "inicio": "Art. 34", "fim": "Art. 41"}, {"title": "Violação dos Deveres e Conselhos", "inicio": "Art. 42", "fim": "Art. 49"}, {"title": "Direitos e Prerrogativas", "inicio": "Art. 50", "fim": "Art. 75"}, {"title": "Agregação e Reversão", "inicio": "Art. 80", "fim": "Art. 87"}, {"title": "Excedente e Ausente", "inicio": "Art. 88", "fim": "Art. 93"}, {"title": "Desligamento e Reserva Remunerada", "inicio": "Art. 94", "fim": "Art. 103"}, {"title": "Reforma e Demissão", "inicio": "Art. 104", "fim": "Art. 120"}, {"title": "Licenciamento e Exclusão", "inicio": "Art. 121", "fim": "Art. 133"}, {"title": "Tempo de Serviço e Disposições Finais", "inicio": "Art. 134", "fim": "Art. 157"}], "ICAs": [{"title": "ICA 111-1 (IPM na FAB) - Conceituação e Instauração", "inicio": "Item 1", "fim": "Item 3"}, {"title": "ICA 111-1 (IPM na FAB) - Encarregado e Rito Procedimental", "inicio": "Item 4", "fim": "Item 5"}, {"title": "ICA 111-1 (IPM na FAB) - Relatório, Solução e Prazos", "inicio": "Item 6", "fim": "Item 10"}, {"title": "ICA 111-2 (Sindicância) - Conceituação e Competência", "inicio": "Item 1", "fim": "Item 3"}, {"title": "ICA 111-2 (Sindicância) - Prazos e Encarregados", "inicio": "Item 4", "fim": "Item 6"}, {"title": "ICA 111-2 (Sindicância) - Direitos do Sindicado e Oitivas", "inicio": "Item 7", "fim": "Item 11"}, {"title": "ICA 111-2 (Sindicância) - Relatório, Solução e Recursos", "inicio": "Item 12", "fim": "Item 15"}, {"title": "ICA 111-3 (APFD) - Disposições, Procedimento e Prisão", "inicio": "Item 1", "fim": "Item 4"}, {"title": "ICA 111-3 (APFD) - Comunicações e Inquirição", "inicio": "Item 5", "fim": "Item 8"}, {"title": "ICA 111-3 (APFD) - Perícias, Prazos e Encaminhamento", "inicio": "Item 9", "fim": "Item 19"}, {"title": "ICA 111-6 (PATD) - Abertura e Direitos do Arrolado", "inicio": "Item 1", "fim": "Item 4"}, {"title": "ICA 111-6 (PATD) - Sistemática de Apuração (FATD)", "inicio": "Item 5", "fim": "Item 5.1.5"}, {"title": "ICA 111-6 (PATD) - Relatório, Punição e Recursos", "inicio": "Item 5.1.6", "fim": "Item 7"}], "CPM": [{"title": "Aplicação da Lei Penal Militar", "inicio": "Art. 1", "fim": "Art. 28"}, {"title": "O Crime e a Imputabilidade Penal", "inicio": "Art. 29", "fim": "Art. 54"}, {"title": "Penas Principais e Acessórias", "inicio": "Art. 55", "fim": "Art. 108"}, {"title": "Ação Penal e Extinção da Punibilidade", "inicio": "Art. 121", "fim": "Art. 135"}, {"title": "Crimes contra a Autoridade ou Disciplina Militar", "inicio": "Art. 149", "fim": "Art. 182"}, {"title": "Crimes contra o Serviço e o Dever Militar", "inicio": "Art. 183", "fim": "Art. 204"}, {"title": "Crimes contra a Administração e a Justiça Militar", "inicio": "Art. 298", "fim": "Art. 354"}, {"title": "Crimes contra a Segurança Externa", "inicio": "Art. 136", "fim": "Art. 148"}, {"title": "Crimes contra a Pessoa e Liberdade Individual", "inicio": "Art. 205", "fim": "Art. 231"}, {"title": "Crimes Sexuais e Ultraje Público ao Pudor", "inicio": "Art. 232", "fim": "Art. 239"}, {"title": "Crimes contra o Patrimônio (Furto a Dano)", "inicio": "Art. 240", "fim": "Art. 267"}, {"title": "Crimes contra a Incolumidade Pública", "inicio": "Art. 268", "fim": "Art. 297"}, {"title": "Crimes Militares em Tempo de Guerra", "inicio": "Art. 355", "fim": "Art. 410"}], "CPPM": [{"title": "Lei de Processo e Polícia Judiciária Militar", "inicio": "Art. 1", "fim": "Art. 8"}, {"title": "Inquérito Policial Militar (IPM)", "inicio": "Art. 9", "fim": "Art. 28"}, {"title": "Ação Penal Militar e o Processo", "inicio": "Art. 29", "fim": "Art. 76"}, {"title": "Fôro Militar e Competência", "inicio": "Art. 82", "fim": "Art. 121"}, {"title": "Questões Prejudiciais e Incidentes", "inicio": "Art. 122", "fim": "Art. 169"}, {"title": "Medidas Assecuratórias e Prisões", "inicio": "Art. 170", "fim": "Art. 242"}, {"title": "Prisão em Flagrante, Preventiva e Liberdade", "inicio": "Art. 243", "fim": "Art. 276"}, {"title": "Citações, Intimações e Atos Probatórios", "inicio": "Art. 277", "fim": "Art. 383"}, {"title": "Processo Ordinário e Instrução Criminal", "inicio": "Art. 384", "fim": "Art. 450"}, {"title": "Processos de Deserção e Insubmissão", "inicio": "Art. 451", "fim": "Art. 465"}, {"title": "Habeas Corpus e Restauração de Autos", "inicio": "Art. 466", "fim": "Art. 488"}, {"title": "Processos no STM e Correição Parcial", "inicio": "Art. 489", "fim": "Art. 498"}, {"title": "Nulidades e Recursos em Geral", "inicio": "Art. 499", "fim": "Art. 587"}, {"title": "Execução das Penas e Incidentes", "inicio": "Art. 588", "fim": "Art. 658"}, {"title": "Reabilitação e Medidas de Segurança", "inicio": "Art. 659", "fim": "Art. 674"}, {"title": "Justiça Militar em Tempo de Guerra", "inicio": "Art. 675", "fim": "Art. 710"}, {"title": "Disposições Finais e Transitórias", "inicio": "Art. 711", "fim": "Art. 718"}], "RCONT": [{"title": "Sinais de Respeito e Generalidades", "inicio": "Art. 1", "fim": "Art. 14"}, {"title": "Continência Individual", "inicio": "Art. 15", "fim": "Art. 30"}, {"title": "Continência em Veículos e Apresentação", "inicio": "Art. 31", "fim": "Art. 43"}, {"title": "Continência da Tropa (A pé firme e deslocamento)", "inicio": "Art. 44", "fim": "Art. 60"}, {"title": "Continência em Desfile e Situações Diversas", "inicio": "Art. 61", "fim": "Art. 70"}, {"title": "Continência da Guarda e Sentinela", "inicio": "Art. 71", "fim": "Art. 80"}, {"title": "Toques de Corneta, Bandas e Hinos", "inicio": "Art. 81", "fim": "Art. 92"}, {"title": "Bandeiras-Insígnias, Distintivos e Estandartes", "inicio": "Art. 93", "fim": "Art. 99"}, {"title": "Honras de Recepção, Despedida e Comissões", "inicio": "Art. 100", "fim": "Art. 108"}, {"title": "Preito da Tropa (Honras de Gala e Fúnebres)", "inicio": "Art. 109", "fim": "Art. 139"}, {"title": "Cerimonial Militar e Precedência", "inicio": "Art. 140", "fim": "Art. 152"}, {"title": "Cerimonial da Bandeira Nacional", "inicio": "Art. 153", "fim": "Art. 174"}, {"title": "Compromissos e Passagens de Comando", "inicio": "Art. 175", "fim": "Art. 186"}, {"title": "Recepções, Despedidas e Condecorações", "inicio": "Art. 187", "fim": "Art. 198"}, {"title": "Substituição de Guardas e Sentinelas", "inicio": "Art. 199", "fim": "Art. 204"}], "PORTUGUÊS": [{"title": "Gramática - Acentuação Gráfica e Ortografia", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Estrutura e Formação de Palavras", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Substantivo e Adjetivo", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Artigo, Numeral, Advérbio e Preposição", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Pronomes e Conjunções", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Verbo (Flexão e Classificação)", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Sintaxe do Período Simples", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Sintaxe do Período Composto", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Concordância e Regência", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Gramática - Pontuação, Crase, Hífen e Vocativo", "inicio": "Item 1.1", "fim": "Item 1.1"}, {"title": "Interpretação Textual - Tipos, Gêneros e Coesão", "inicio": "Item 1.2", "fim": "Item 1.2"}, {"title": "Interpretação Textual - Sentidos, Discurso e Intertextualidade", "inicio": "Item 1.2", "fim": "Item 1.2"}], "RDAER": [{"title": "Princípios Gerais de Disciplina", "inicio": "Art. 1", "fim": "Art. 7"}, {"title": "Transgressões Disciplinares (Definição e Esfera)", "inicio": "Art. 8", "fim": "Art. 13"}, {"title": "Punições Disciplinares (Gradação e Execução)", "inicio": "Art. 14", "fim": "Art. 28"}, {"title": "Comportamento Militar", "inicio": "Art. 39", "fim": "Art. 40"}, {"title": "Competência e Jurisdição para Aplicação", "inicio": "Art. 41", "fim": "Art. 54"}, {"title": "Parte, Recursos e Recompensas", "inicio": "Art. 55", "fim": "Art. 73"}]};
+
+        // LocalStorage Key
+        const STORAGE_KEY = 'estudos_fab_progress_v4';
+
+        let activeSubject = Object.keys(rawSubjects)[0];
+        let userProgress = loadProgress();
+
+        let barChartInstance = null;
+        let doughnutChartInstance = null;
+
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch(e) {
+                    console.error("Erro ao carregar progresso", e);
+                }
+            }
+            return {};
+        }
+
+        function saveProgress() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(userProgress));
+            renderDashboardView();
+            showToast("Progresso salvo!");
+        }
+
+        function getTopicKey(subject, index) {
+            return `${subject}_${index}`;
+        }
+
+        function getTopicState(subject, index) {
+            const key = getTopicKey(subject, index);
+            return userProgress[key] || { teoriaState: 0, questoes: false, r1: false, r2: false, r3: false };
+        }
+
+        function cycleTeoriaState(subject, index) {
+            const key = getTopicKey(subject, index);
+            if (!userProgress[key]) {
+                userProgress[key] = { teoriaState: 0, questoes: false, r1: false, r2: false, r3: false };
+            }
+            
+            let current = userProgress[key].teoriaState || 0;
+            userProgress[key].teoriaState = (current + 1) % 3;
+            
+            saveProgress();
+            refreshActiveView();
+        }
+
+        function toggleCheck(subject, index, field) {
+            const key = getTopicKey(subject, index);
+            if (!userProgress[key]) {
+                userProgress[key] = { teoriaState: 0, questoes: false, r1: false, r2: false, r3: false };
+            }
+            userProgress[key][field] = !userProgress[key][field];
+            saveProgress();
+            refreshActiveView();
+        }
+
+        function refreshActiveView() {
+            const activeTabBtn = document.querySelector('.tab-btn.active');
+            if (activeTabBtn) {
+                const text = activeTabBtn.innerText.trim();
+                if (text.includes('Edital')) renderEditalView();
+                if (text.includes('Gráficos')) renderGraficosView();
+            }
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+            if (tabName === 'dashboard') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('view-dashboard').classList.add('active');
+                renderDashboardView();
+            } else if (tabName === 'graficos') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('view-graficos').classList.add('active');
+                renderGraficosView();
+            } else if (tabName === 'edital') {
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+                document.getElementById('view-edital').classList.add('active');
+                renderEditalView();
+            }
+        }
+
+        function calculateStats() {
+            let totalItems = 0;
+            let totalTeoriaVal = 0, doneTeoriaVal = 0;
+            let totalQuestoes = 0, doneQuestoes = 0;
+            let totalRevisoes = 0, doneRevisoes = 0;
+
+            const subjectStats = {};
+
+            Object.keys(rawSubjects).forEach(sub => {
+                const topics = rawSubjects[sub];
+                let subTotal = topics.length * 5;
+                let subDone = 0;
+
+                topics.forEach((top, idx) => {
+                    const st = getTopicState(sub, idx);
+                    
+                    totalTeoriaVal += 2;
+                    let tVal = st.teoriaState || 0;
+                    doneTeoriaVal += tVal;
+
+                    totalQuestoes += 1;
+                    if (st.questoes) doneQuestoes += 1;
+
+                    totalRevisoes += 3;
+                    if (st.r1) doneRevisoes++;
+                    if (st.r2) doneRevisoes++;
+                    if (st.r3) doneRevisoes++;
+
+                    let itemDone = tVal + (st.questoes ? 1 : 0) + (st.r1 ? 1 : 0) + (st.r2 ? 1 : 0) + (st.r3 ? 1 : 0);
+                    subDone += itemDone;
+                });
+
+                subjectStats[sub] = {
+                    total: subTotal,
+                    done: subDone,
+                    percent: Math.round((subDone / subTotal) * 100) || 0,
+                    topicsCount: topics.length
+                };
+
+                totalItems += subTotal;
+            });
+
+            const overallDone = doneTeoriaVal + doneQuestoes + doneRevisoes;
+            const overallPercent = Math.round((overallDone / totalItems) * 100) || 0;
+
+            return {
+                overallPercent,
+                teoriaPercent: Math.round((doneTeoriaVal / totalTeoriaVal) * 100) || 0,
+                questoesPercent: Math.round((doneQuestoes / totalQuestoes) * 100) || 0,
+                revisoesPercent: Math.round((doneRevisoes / totalRevisoes) * 100) || 0,
+                subjectStats
+            };
+        }
+
+        function renderDashboardView() {
+            const stats = calculateStats();
+
+            document.getElementById('total-percent').innerText = `${stats.overallPercent}%`;
+            document.getElementById('total-progress-fill').style.width = `${stats.overallPercent}%`;
+
+            document.getElementById('stat-teoria').innerText = `${stats.teoriaPercent}%`;
+            document.getElementById('stat-questoes').innerText = `${stats.questoesPercent}%`;
+            document.getElementById('stat-revisoes').innerText = `${stats.revisoesPercent}%`;
+
+            const container = document.getElementById('subject-progress-list');
+            container.innerHTML = '';
+
+            Object.keys(stats.subjectStats).forEach(sub => {
+                const info = stats.subjectStats[sub];
+                const card = document.createElement('div');
+                card.className = 'subject-progress-card';
+                card.onclick = () => {
+                    activeSubject = sub;
+                    switchTab('edital');
+                };
+                card.style.cursor = 'pointer';
+
+                card.innerHTML = `
+                    <div class="header">
+                        <span>${sub}</span>
+                        <span style="color: var(--primary);">${info.percent}%</span>
+                    </div>
+                    <div class="subject-bar-bg">
+                        <div class="subject-bar-fill" style="width: ${info.percent}%;"></div>
+                    </div>
+                    <div class="subject-details-mini">
+                        <span>${info.topicsCount} tópicos</span>
+                        <span>Abrir edital &rarr;</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderGraficosView() {
+            const stats = calculateStats();
+            
+            const subjects = Object.keys(stats.subjectStats);
+            const percents = subjects.map(s => stats.subjectStats[s].percent);
+
+            // Chart 1: Bar Chart per Subject
+            const ctxBar = document.getElementById('chartSubjectBar').getContext('2d');
+            if (barChartInstance) barChartInstance.destroy();
+            
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: subjects,
+                    datasets: [{
+                        label: 'Progresso (%)',
+                        data: percents,
+                        backgroundColor: '#2563eb',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Chart 2: Doughnut Chart for Activity Type Breakdown
+            const ctxDoughnut = document.getElementById('chartTypeDoughnut').getContext('2d');
+            if (doughnutChartInstance) doughnutChartInstance.destroy();
+
+            doughnutChartInstance = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Teoria', 'Questões', 'Revisões'],
+                    datasets: [{
+                        data: [stats.teoriaPercent, stats.questoesPercent, stats.revisoesPercent],
+                        backgroundColor: ['#3b82f6', '#f97316', '#10b981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function renderEditalView() {
+            const pillsContainer = document.getElementById('subject-pills');
+            pillsContainer.innerHTML = '';
+
+            Object.keys(rawSubjects).forEach(sub => {
+                const pill = document.createElement('div');
+                pill.className = `pill ${sub === activeSubject ? 'active' : ''}`;
+                pill.innerText = sub;
+                pill.onclick = () => {
+                    activeSubject = sub;
+                    renderEditalView();
+                };
+                pillsContainer.appendChild(pill);
+            });
+
+            const container = document.getElementById('edital-topics-list');
+            container.innerHTML = '';
+
+            const topics = rawSubjects[activeSubject] || [];
+            const filter = document.getElementById('status-filter').value;
+
+            let visibleCount = 0;
+
+            topics.forEach((top, idx) => {
+                const st = getTopicState(activeSubject, idx);
+                const isCompleted = (st.teoriaState === 2) && st.questoes && st.r1 && st.r2 && st.r3;
+
+                if (filter === 'pending' && isCompleted) return;
+                if (filter === 'completed' && !isCompleted) return;
+
+                visibleCount++;
+                const row = createTopicRow(activeSubject, top, idx, st);
+                container.appendChild(row);
+            });
+
+            document.getElementById('subject-count-label').innerText = `${visibleCount} de ${topics.length} tópicos`;
+        }
+
+        function createTopicRow(subject, top, idx, st) {
+            const row = document.createElement('div');
+            const isCompleted = (st.teoriaState === 2) && st.questoes && st.r1 && st.r2 && st.r3;
+            row.className = `topic-row ${isCompleted ? 'completed' : ''}`;
+
+            const rangeText = (top.inicio || top.fim) ? `${top.inicio || ''} ${top.fim ? '- ' + top.fim : ''}` : '-';
+
+            let circleIcon = '';
+            if (st.teoriaState === 1) circleIcon = '⏳';
+            if (st.teoriaState === 2) circleIcon = '✓';
+
+            row.innerHTML = `
+                <button class="status-circle-btn state-${st.teoriaState}" onclick="cycleTeoriaState('${subject}', ${idx})" title="Clique para alterar Teoria (Cinza: Não iniciada | Laranja: Em andamento | Verde: Concluída)">
+                    ${circleIcon}
+                </button>
+
+                <div class="topic-idx">${idx + 1}</div>
+
+                <div class="topic-title-cell">
+                    <div class="topic-title-text">${top.title}</div>
+                </div>
+
+                <div class="topic-range-tag" title="${rangeText}">${rangeText}</div>
+
+                <div class="questoes-cell">
+                    <label class="questoes-checkbox-label">
+                        <input type="checkbox" ${st.questoes ? 'checked' : ''} onchange="toggleCheck('${subject}', ${idx}, 'questoes')">
+                        <span>Ex.</span>
+                    </label>
+                </div>
+
+                <div class="revisoes-inline">
+                    <label class="rev-check">
+                        <input type="checkbox" ${st.r1 ? 'checked' : ''} onchange="toggleCheck('${subject}', ${idx}, 'r1')"> R1
+                    </label>
+                    <label class="rev-check">
+                        <input type="checkbox" ${st.r2 ? 'checked' : ''} onchange="toggleCheck('${subject}', ${idx}, 'r2')"> R2
+                    </label>
+                    <label class="rev-check">
+                        <input type="checkbox" ${st.r3 ? 'checked' : ''} onchange="toggleCheck('${subject}', ${idx}, 'r3')"> R3
+                    </label>
+                </div>
+            `;
+            return row;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userProgress, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `estudos_fab_backup_${new Date().toISOString().slice(0,10)}.json`);
+            dlAnchorElem.click();
+        }
+
+        function importData() {
+            document.getElementById('import-file').click();
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    userProgress = imported;
+                    saveProgress();
+                    alert("Backup importado com sucesso!");
+                } catch(err) {
+                    alert("Erro ao ler arquivo de backup.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderDashboardView();
+
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'estudos-v4';
+                    self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./']))));
+                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.callObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).catch(err => console.log('SW setup skipped'));
+            }
+        });
+    </script>
+</body>
+</html>
